@@ -31,9 +31,10 @@ namespace flow
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+            services.AddCors();
+            services.AddTransient<IPageServer, PageServer>();
 
-
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,11 +52,13 @@ namespace flow
 
             app.UseHttpsRedirection();
             app.UseCookiePolicy();
+            app.UseCors();
 
             app.Run(async context =>
             {
-                Page page = new Page(context);
-                page .Write();
+                IPageServer pageServer = context.RequestServices.GetService<IPageServer>();
+                pageServer.SetContext(context);
+                await context.Response.WriteAsync(pageServer.Get());
             });
         }
     }
