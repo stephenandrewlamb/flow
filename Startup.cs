@@ -33,8 +33,6 @@ namespace flow
             });
             services.AddCors();
             services.AddTransient<IPageServer, PageServer>();
-
-            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,6 +50,7 @@ namespace flow
 
             app.UseHttpsRedirection();
             app.UseCookiePolicy();
+<<<<<<< HEAD
             app.UseCors();
 
             app.Run(async context =>
@@ -59,6 +58,13 @@ namespace flow
                 IPageServer pageServer = context.RequestServices.GetService<IPageServer>();
                 pageServer.SetContext(context);
                 await context.Response.WriteAsync(pageServer.Get());
+=======
+
+            app.Run(async context =>
+            {
+                Page page = new Page(context);
+                page .Write();
+>>>>>>> 44f15f4cef8bcc200c1615ca5c00e0104b671dee
             });
         }
     }
